@@ -5,10 +5,9 @@ plane (**eUPF**), with **URR** usage metering and in-kernel quota enforcement.
 
 ## Layout
 
-| Folder | Contents |
+| Path | Contents |
 |---|---|
-| [`ebpf/1/`](ebpf/1/README.md) | **SD-Core + eUPF integration** — overview, what changed, architecture, deployment guide |
-| `ebpf/2/`, `ebpf/3/` | reserved (empty for now) |
+| [`ebpf/1-sdcore+eupf_readme.md`](ebpf/1-sdcore+eupf_readme.md) | **SD-Core + eUPF integration** — overview, what changed, architecture, deployment guide |
 | `ran/` | RAN side (UERANSIM configs / netns) — placeholder |
 | `core/` | SD-Core control-plane configs — placeholder |
 
@@ -18,4 +17,4 @@ plane (**eUPF**), with **URR** usage metering and in-kernel quota enforcement.
 - **eUPF** (XDP URR datapath + dashboard): https://github.com/Shiva-Marshall/eUPF-enhanced
 
 ## Start here
-→ **[`ebpf/1/README.md`](ebpf/1/README.md)** — the integration write-up and deployment guide.
+→ **[`ebpf/1-sdcore+eupf_readme.md`](ebpf/1-sdcore+eupf_readme.md)** — the integration write-up and deployment guide.
