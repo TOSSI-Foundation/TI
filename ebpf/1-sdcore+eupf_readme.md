@@ -1,7 +1,7 @@
-# SD-Core × eUPF — XDP Datapath with In-Kernel Usage Metering (URR)
+# SD-Core × eUPF - XDP Datapath with In-Kernel Usage Metering (URR)
 
 Integration of **SD-Core** (open-source 5G core) with **eUPF**, an **eBPF/XDP** user
-plane — replacing SD-Core's default BESS user plane — plus **URR (Usage Reporting)**:
+plane - replacing SD-Core's default BESS user plane - plus **URR (Usage Reporting)**:
 subscriber data is metered and capped **in the kernel fast path**, with the cap set from
 the SMF and enforced per subscriber.
 
@@ -12,23 +12,23 @@ the SMF and enforced per subscriber.
 A 5G Standalone core follows **CUPS** (Control/User Plane Separation): the **SMF** decides
 session policy, the **UPF** forwards subscriber packets, and they talk over **N4/PFCP**
 (TS 29.244). SD-Core ships a **BESS** user plane that runs in userspace and installs no
-URR — so it never measured or capped data. This integration:
+URR - so it never measured or capped data. This integration:
 
-- runs the user plane on **eUPF (eBPF/XDP)** — packets are classified and forwarded
+- runs the user plane on **eUPF (eBPF/XDP)** - packets are classified and forwarded
   **inside the Linux kernel**, before the network stack;
 - adds **URR metering + quota enforcement** end-to-end: the SMF installs a URR at PDU
   session establishment (configurable via `smfcfg`), and eUPF meters volume and **drops
   traffic in-kernel** when the quota is hit;
 - adds **per-subscriber persistent accounting** so a cap survives re-attach (a new session
-  / new IP doesn't reset it — it's keyed by SUPI);
+  / new IP doesn't reset it - it's keyed by SUPI);
 - ships a small **live dashboard** (`scripts/urrmon`) that reads eUPF's REST API.
 
 ## 2. Repositories
 
 | Component | Repo | What we changed |
 |---|---|---|
-| **SMF** | https://github.com/Shiva-Marshall/sdcore-smf-urr-implemented | URR install (config-driven) + per-subscriber accounting — see its `URR-SUPPORT.md` |
-| **eUPF** | https://github.com/Shiva-Marshall/eUPF-enhanced | URR datapath + fixes + the `scripts/urrmon` dashboard — see its `ENHANCEMENTS.md` |
+| **SMF** | https://github.com/Shiva-Marshall/sdcore-smf-urr-implemented | URR install (config-driven) + per-subscriber accounting - see its `URR-SUPPORT.md` |
+| **eUPF** | https://github.com/Shiva-Marshall/eUPF-enhanced | URR datapath + fixes + the `scripts/urrmon` dashboard - see its `ENHANCEMENTS.md` |
 
 ## 3. Base versions (this deployment)
 
@@ -44,7 +44,7 @@ URR — so it never measured or capped data. This integration:
 
 > SD-Core is brought up with the **aether-onramp** deployment (Helm `sd-core` chart); the
 > **BESS UPF is replaced by the eUPF Helm chart**. The SMF still speaks PFCP, bridged by
-> the **upf-adapter** over N4 — same interface, eBPF/XDP engine.
+> the **upf-adapter** over N4 - same interface, eBPF/XDP engine.
 
 ## 4. What we changed
 
@@ -55,7 +55,7 @@ URR — so it never measured or capped data. This integration:
   `volumeQuotaBytes`).
 - **Per-subscriber accounting**: consumes the URR Usage Reports, keeps a running
   `usedBytes` per **SUPI** in Mongo (`sdcore_smf` → `smf.data.subUsage`), and installs
-  `quota = cap − used` on the next attach — so airplane-mode / re-attach doesn't reset the cap.
+  `quota = cap - used` on the next attach - so airplane-mode / re-attach doesn't reset the cap.
 - Files: `factory/config.go`, `context/pfcp_rules.go`, `context/upf.go`,
   `context/datapath.go`, `context/urr_usage.go`, `pfcp/message/build.go`,
   `pfcp/adapter/adapter.go`, `pfcp/handler/handler.go`.
@@ -76,7 +76,7 @@ flowchart LR
   UE([UE]) -->|radio| GNB[gNB]
   GNB -->|"N3 · GTP-U"| EUPF["eUPF<br/>eBPF / XDP · kernel fast path"]
   EUPF -->|N6| DN([Data Network / Internet])
-  subgraph CP["SD-Core control plane — aether-onramp"]
+  subgraph CP["SD-Core control plane - aether-onramp"]
     AMF[AMF] --- SMF[SMF] --- PCF[PCF]
   end
   SMF -->|"PFCP over HTTP"| ADP[upf-adapter]
@@ -99,12 +99,12 @@ sequenceDiagram
     UE->>UPF: downlink data
     UPF->>UPF: URR volume += bytes (in-kernel)
   end
-  UPF-->>SMF: Session Report (Usage Report) — threshold reached
+  UPF-->>SMF: Session Report (Usage Report) - threshold reached
   Note over UPF: volume == quota
   UPF->>UPF: XDP_DROP (cap enforced)
-  UPF-->>SMF: Session Report — quota exhausted
+  UPF-->>SMF: Session Report - quota exhausted
   SMF->>UPF: Session Deletion
-  UPF-->>SMF: Final Usage Report (credited to SUPI: quota = cap − used next attach)
+  UPF-->>SMF: Final Usage Report (credited to SUPI: quota = cap - used next attach)
 ```
 
 *(A detailed native-XDP/SR-IOV architecture image can be added here as `architecture.png`.)*
@@ -113,15 +113,15 @@ sequenceDiagram
 
 > Assumes a single-node **RKE2** cluster and the **aether-onramp** repo checked out.
 
-**1 — Deploy the SD-Core control plane (aether-onramp).**
+**1 - Deploy the SD-Core control plane (aether-onramp).**
 Bring up SD-Core with aether-onramp (Helm `sd-core` chart), namespace `aether-5gc`.
 
-**2 — Replace the BESS UPF with eUPF.**
+**2 - Replace the BESS UPF with eUPF.**
 Disable/skip the BESS `upf` and deploy the **eUPF Helm chart** (`0.5.0`) with our image
 `eupf:dev-urrsdf`. eUPF runs its Go control plane (PFCP :8805, REST :8080) + the XDP
 datapath. Ensure `enableUPFAdapter: true` on the SMF so PFCP is bridged by the upf-adapter.
 
-**3 — Build & deploy the modified SMF.**
+**3 - Build & deploy the modified SMF.**
 ```bash
 # in the SMF repo
 docker build -t sdcore-smf:urracct2 .
@@ -130,7 +130,7 @@ docker save sdcore-smf:urracct2 | sudo ctr --address /run/k3s/containerd/contain
 kubectl -n aether-5gc set image deploy/smf smf=docker.io/library/sdcore-smf:urracct2
 ```
 
-**4 — Enable URR in `smfcfg`.**
+**4 - Enable URR in `smfcfg`.**
 ```yaml
 configuration:
   urr:
@@ -139,33 +139,33 @@ configuration:
     volumeQuotaBytes:    1073741824    # 1 GiB    (hard cap)
 ```
 Apply and restart the SMF; re-establish the PFCP association (**restart upf-adapter, then
-smf** — the SMF caches the UPF IP).
+smf** - the SMF caches the UPF IP).
 
-**5 — Host routing glue (pod-based eUPF).**
+**5 - Host routing glue (pod-based eUPF).**
 Because eUPF is a pod, route the UE pool to it from the host (policy routing) and NAT the
-uplink — re-applied whenever the eUPF pod IP changes:
+uplink - re-applied whenever the eUPF pod IP changes:
 ```bash
 ip route replace <UE-pool> via <eUPF-pod-IP> dev <cali-veth> table 200
 ip rule add to <UE-pool> lookup 200
 iptables -t nat -A POSTROUTING -s <UE-pool> -j MASQUERADE
 ```
 
-**6 — Bring up the RAN.**
+**6 - Bring up the RAN.**
 Start UERANSIM `nr-gnb` then `nr-ue` in the `ran` netns.
 
 ## 7. Verify / demo
 
-- **eUPF-side** — installed URR + counters:
+- **eUPF-side** - installed URR + counters:
   `curl http://<eUPF>:8080/api/v1/pfcp_sessions` and `.../api/v1/urr_map`.
-- **Cap test** — drive downlink traffic through the UE; usage climbs, crosses the
+- **Cap test** - drive downlink traffic through the UE; usage climbs, crosses the
   threshold, and is **CAPPED** (traffic dropped in-kernel) at the quota.
-- **Accounting** — deregister (airplane mode) and re-attach: the new session installs the
-  **remaining** quota (`cap − used`), so the cap is not reset.
-- **Dashboard** — `python3 scripts/urrmon/urrmon.py --serve` → `http://<host>:8088`
+- **Accounting** - deregister (airplane mode) and re-attach: the new session installs the
+  **remaining** quota (`cap - used`), so the cap is not reset.
+- **Dashboard** - `python3 scripts/urrmon/urrmon.py --serve` → `http://<host>:8088`
   (per-subscriber usage-over-time, status OK/THRESHOLD/CAPPED).
 
 ## 8. References
-- 3GPP **TS 29.244** — PFCP (PDR/FAR/QER/URR)
-- SD-Core — https://github.com/omec-project
-- eUPF — https://github.com/edgecomllc/eupf
-- aether-onramp — https://github.com/opennetworkinglab/aether-onramp
+- 3GPP **TS 29.244** - PFCP (PDR/FAR/QER/URR)
+- SD-Core - https://github.com/omec-project
+- eUPF - https://github.com/edgecomllc/eupf
+- aether-onramp - https://github.com/opennetworkinglab/aether-onramp
