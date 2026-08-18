@@ -1,0 +1,4 @@
+# Everything the build script fetches and produces. Never commit this:
+# it holds full clones of the component repositories and build logs that
+# contain local paths.
+.nf-build/
