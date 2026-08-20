@@ -46,8 +46,8 @@ cap set from the SMF and enforced per subscriber.
 | AMF - mobility, hardened | https://github.com/TOSSI-Foundation/sdcore-amf | `setu-ims-rel1` |
 | SETU - the signalling bridge | https://github.com/coranlabs/SETU | `main` |
 
-Every network function branch begins with the untouched upstream tree as its first commit,
-so the difference between upstream and ours is one `git diff` away.
+Each `setu-ims-rel1` branch begins with the untouched upstream tree as its first commit, so
+the difference between upstream and ours is one `git diff` away.
 
 **eBPF user plane**
 
