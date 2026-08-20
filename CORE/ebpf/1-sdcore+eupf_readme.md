@@ -25,10 +25,10 @@ URR - so it never measured or capped data. This integration:
 
 ## 2. Repositories
 
-| Component | Repo | What we changed |
-|---|---|---|
-| **SMF** | https://github.com/Shiva-Marshall/sdcore-smf-urr-implemented | URR install (config-driven) + per-subscriber accounting - see its `URR-SUPPORT.md` |
-| **eUPF** | https://github.com/Shiva-Marshall/eUPF-enhanced | URR datapath + fixes + the `scripts/urrmon` dashboard - see its `ENHANCEMENTS.md` |
+| Component | Repo | Branch | What we changed |
+|---|---|---|---|
+| **SMF** | https://github.com/TOSSI-Foundation/sdcore-smf | `ebpf-urr` | URR install (config-driven) + per-subscriber accounting - see its `URR-SUPPORT.md` |
+| **eUPF** | https://github.com/TOSSI-Foundation/eUPF | `urr` | URR datapath + fixes + the `scripts/urrmon` dashboard - see its `ENHANCEMENTS.md` |
 
 ## 3. Base versions (this deployment)
 

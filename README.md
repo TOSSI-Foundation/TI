@@ -51,7 +51,10 @@ the difference between upstream and ours is one `git diff` away.
 
 **eBPF user plane**
 
-| Component | Repository |
-|---|---|
-| SMF with usage reporting and per-subscriber accounting | https://github.com/Shiva-Marshall/sdcore-smf-urr-implemented |
-| eUPF with XDP metering and a live dashboard | https://github.com/Shiva-Marshall/eUPF-enhanced |
+| Component | Repository | Branch |
+|---|---|---|
+| SMF with usage reporting and per-subscriber accounting | https://github.com/TOSSI-Foundation/sdcore-smf | `ebpf-urr` |
+| eUPF with XDP metering and a live dashboard | https://github.com/TOSSI-Foundation/eUPF | `urr` |
+
+The SMF carries both integrations as sibling branches off the same repository: `setu-ims-rel1`
+for IMS, `ebpf-urr` for the eBPF user plane.
