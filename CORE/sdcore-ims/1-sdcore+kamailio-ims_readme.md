@@ -1,7 +1,8 @@
 # IMS on SD-Core with Kamailio, joined by SETU: voice, video and messaging
 
 A working voice service on an open 5G standalone core. Calls, video calls and text messages,
-verified on commercial handsets over a real 5G SA radio - with no HSS, no policy server and
+verified on commercial handsets over a real 5G SA radio - an OCUDU gNB driving a LiteON
+O-RU - with no HSS, no policy server and
 no SMS centre anywhere in the deployment.
 
 ---
@@ -34,7 +35,7 @@ the gap this guide fills.
 | **SD-Core** | the 5G core - registration, sessions, policy, user plane | 25 files, three network functions |
 | **Kamailio 6.1** | the IMS - all the SIP handling | nothing, one config line at each end |
 | **SETU** | the bridge between them | - |
-| **gNB and radio** | the access network | nothing, configuration only |
+| **OCUDU gNB and O-RU** | the access network | nothing, configuration only |
 
 **SETU** presents the IMS with exactly the interfaces it already expects: an HSS on `Cx`,
 a policy server on `Rx`. Kamailio has no idea it is talking to anything unusual, which is
@@ -164,9 +165,16 @@ stranded on the core. Full configuration reference is in the SETU repository.
 
 ### The radio
 
-Any 5G SA base station, no code changes. Point it at the AMF's N2 address, set the network
-identity and slice to match, and bind the user-plane interface toward the UPF. Confirm the
-setup handshake succeeds, then attach a provisioned SIM.
+Any 5G SA gNB works, and the radio software needs no code change. We drove a LiteON O-RU
+over a 7.2 fronthaul split with **OCUDU**, editing only its configuration: the AMF's N2
+address, the gNB's own bind address, the network identity, tracking area and slice, and the
+user-plane bind address toward the UPF.
+
+```bash
+sudo ./gnb -c <your-gnb-config>.yml
+```
+
+Confirm the setup handshake succeeds, then attach a provisioned SIM.
 
 ## Checking it works
 
