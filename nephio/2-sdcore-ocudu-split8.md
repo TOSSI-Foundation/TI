@@ -5,6 +5,12 @@ Intent-driven bring-up of the **sdcore-ocudu** stack with an **OCUDU-RAN** gNB d
 **Cluster API**. A real UE attaches over the air.
 
 ---
+## Architecture
+
+**Under the hood** — Nephio Core's CRDs (Resources, Inventory, Infrastructure, Config, Workload) and controllers reconcile the intent and actuate it onto the targets: the network functions, the workload clusters, the network fabric and Git.
+
+<img width="1920" height="1080" alt="43" src="https://github.com/user-attachments/assets/ffc28e5e-b471-40b6-9108-e54b0bef31f8" />
+
 
 ## 1. Bring up the stack (Nephio)
 
