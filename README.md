@@ -35,6 +35,20 @@ cap set from the SMF and enforced per subscriber.
 
 → **[Read the guide](CORE/ebpf/1-sdcore+eupf_readme.md)**
 
+### Deploying SD-Core + OCUDU-RAN with Nephio
+
+**[`nephio/`](nephio/)**
+
+Standing up a private 5G network by hand is a long chain of coupled, drift-prone steps. This
+turns the whole stack — SD-Core control plane, BESS UPF and an OCUDU-RAN gNB — into a single
+declarative intent. A management cluster runs Nephio; you apply one `EdgeSite`/`Fleet` object
+and the operator provisions the cluster (Cluster API + BYOH), renders the packages (Porch) and
+reconciles them onto the edge (Config Sync). Addressing, the slice, subscribers and the
+N2/N3/N4/N6 datapath are derived from intent — no per-site scripting.
+
+- → **[RF-sim deployment - hardware-free, 50-UE scale](nephio/1-sdcore-ocudu-rfsim.md)**
+- → **[Split-8 deployment - real USRP SDR](nephio/2-sdcore-ocudu-split8.md)**
+
 ## Component repositories
 
 **IMS on SD-Core**
@@ -58,3 +72,12 @@ the difference between upstream and ours is one `git diff` away.
 
 The SMF carries both integrations as sibling branches off the same repository: `setu-ims-rel1`
 for IMS, `ebpf-urr` for the eBPF user plane.
+
+**Nephio deployment**
+
+| Component | Repository | Branch |
+|---|---|---|
+| Nephio-Stack - operator, blueprints, bootstrap | https://github.com/TOSSI-Foundation/Nephio-Stack | `main` |
+
+One stack (`sdcore-ocudu`) shipped as versioned releases; the core and RAN are Nephio
+blueprints, so further 5G-core + RAN combinations follow as their own release lines.
