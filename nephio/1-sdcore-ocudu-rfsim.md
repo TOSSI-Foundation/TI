@@ -5,6 +5,17 @@ and an **OCUDU-RAN** gNB in **RF-simulation** mode — on a bare server via **Ne
 Config Sync) and **Cluster API**, then a **50-UE** RF-sim load against it. No radio hardware.
 
 ---
+## Architecture
+
+**The stack** — Nephio orchestrates an SD-Core control plane, a BESS edge UPF and an OCUDU-RAN gNB; one intent object describes a whole site.
+
+<img width="1920" height="1080" alt="architecture_diagram_2" src="https://github.com/user-attachments/assets/b24ea70e-6e6c-459c-ac5d-2f6a82625685" />
+
+**The deployment flow** — one `EdgeSite`/`Fleet` intent becomes a running edge: the management cluster provisions the Kubernetes cluster (Cluster API + BYOH) and reconciles the SD-Core control plane, BESS UPF and OCUDU gNB onto the edge (Config Sync + a node-local datapath actuator).
+
+<img width="1920" height="1080" alt="44" src="https://github.com/user-attachments/assets/6894add3-b943-4542-813a-5a4fecb6fc25" />
+
+
 
 ## 1. Bring up the stack (Nephio)
 
