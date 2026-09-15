@@ -35,6 +35,20 @@ cap set from the SMF and enforced per subscriber.
 
 → **[Read the guide](CORE/ebpf/1-sdcore+eupf_readme.md)**
 
+### NWDAF-driven traffic steering on the OAI 5G core
+
+**[`CORE/nwdaf/`](CORE/nwdaf/)**
+
+A 5G core chooses the way out to the data network when the session is created and then leaves it
+alone. If that path later degrades, nothing reacts, and moving the session means tearing it down.
+
+This closes the loop on the OpenAirInterface core. The NWDAF measures both data-network paths and
+publishes the result on its standard interface, the PCF authorizes a set of paths per subscriber,
+and the SMF picks one and reprograms the user plane. A live session moves from one N6 path to the
+other with no signalling to the handset and no change to the UE's IP address.
+
+→ **[Read the guide](CORE/nwdaf/1-oai-core-nwdaf.md)**
+
 ### Deploying SD-Core + OCUDU-RAN with Nephio
 
 **[`nephio/`](nephio/)**
@@ -72,6 +86,15 @@ the difference between upstream and ours is one `git diff` away.
 
 The SMF carries both integrations as sibling branches off the same repository: `setu-ims-rel1`
 for IMS, `ebpf-urr` for the eBPF user plane.
+
+**NWDAF traffic steering**
+
+| Component | Repository | Branch |
+|---|---|---|
+| NWDAF services, NF patches, topology and automation | https://github.com/TOSSI-Foundation/oai-nwdaf-ts | `dnai_traffic_steering` |
+
+The OAI SMF, PCF and NRF are not forked. Each change is a patch naming the upstream commit it
+applies to, so moving to a newer OAI release is a rebase.
 
 **Nephio deployment**
 
