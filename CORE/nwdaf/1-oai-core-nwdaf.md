@@ -227,42 +227,8 @@ static data network cannot learn that a session moved.
 
 ## 4. Architecture
 
-Arrows follow the direction information travels. A dotted arrow marks a path that is not a 3GPP
-interface.
+<img width="1920" height="1080" alt="59 (2)" src="https://github.com/user-attachments/assets/7d724cfb-6714-4f48-b05a-a909cc91065f" />
 
-```mermaid
-flowchart LR
-  UE([UE / gnbsim]) -->|"N3 · GTP-U"| UPF["VPP UPF<br/>two N6 network instances"]
-  UPF -->|"N6 · primary"| DN([Data Network])
-  UPF -->|"N6 · secondary"| DN
-
-  subgraph CP["OAI CN5G control plane"]
-    AMF[AMF]
-    SMF["SMF<br/>consumer · decision · actuation"]
-    PCF["PCF<br/>authorized DNAI set"]
-    NRF[NRF]
-  end
-
-  COL["host telemetry collector<br/>runs outside all containers"]
-
-  subgraph NWDAF["NWDAF services"]
-    SBI["southbound<br/>event exposure collection"] --> DB[(MongoDB)]
-    DB --> ENG["engine<br/>DN_PERFORMANCE"]
-    ENG --> NBI["analytics NBI<br/>Nnwdaf_AnalyticsInfo"]
-  end
-
-  AMF ---|"N11"| SMF
-  UPF -->|"N4 · usage reports"| SMF
-  SMF -->|"Nsmf_EventExposure"| SBI
-  AMF -.->|"Namf_EventExposure"| SBI
-  UPF -.->|"per-DNAI N6 counters,<br/>CPU and memory"| COL
-  COL -.-> DB
-  NBI -->|"DN_PERFORMANCE,<br/>polled every 10 s"| SMF
-  PCF -->|"N7 · authorized DNAI set"| SMF
-  SMF -->|"N4 · PFCP rule update"| UPF
-  SMF --- NRF
-  NBI --- NRF
-```
 
 Every interface in the loop is standard except one. The UPF is not a service-based network
 function: it speaks PFCP to the SMF and forwards user traffic, and exposes no interface of its
