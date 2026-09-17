@@ -62,6 +62,7 @@ N2/N3/N4/N6 datapath are derived from intent — no per-site scripting.
 
 - → **[RF-sim deployment - hardware-free, 50-UE scale](nephio/1-sdcore-ocudu-rfsim.md)**
 - → **[Split-8 deployment - real USRP SDR](nephio/2-sdcore-ocudu-split8.md)**
+- → **[Split-7.2 deployment - real O-RU over Open Fronthaul](nephio/3-sdcore-ocudu-split72.md)**
 
 ## Component repositories
 
