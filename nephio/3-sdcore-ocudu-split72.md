@@ -10,8 +10,9 @@ Intent-driven bring-up of the **sdcore-ocudu** stack with an **OCUDU-RAN** gNB r
 
 **Under the hood** — Nephio Core's CRDs (Resources, Inventory, Infrastructure, Config, Workload) and controllers reconcile the intent and actuate it onto the targets: the network functions, the workload clusters, the network fabric and Git.
 
-_(diagram — drag and drop the **Split-7.2 architecture** image here)_
+<img width="1920" height="1080" alt="37" src="https://github.com/user-attachments/assets/af87d0a8-5be1-4c72-ae91-de757cbd8857" />
 
+ 
 ## 1. Bring up the stack (Nephio)
 
 ```bash
