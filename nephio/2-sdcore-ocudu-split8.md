@@ -4,6 +4,9 @@ Intent-driven bring-up of the **sdcore-ocudu** stack with an **OCUDU-RAN** gNB d
 **USRP** over **split 8** (SDR driven directly), on a bare server, via **Nephio** and
 **Cluster API**. A real UE attaches over the air.
 
+
+<img width="1920" height="1080" alt="36" src="https://github.com/user-attachments/assets/5355d811-6f45-4fc6-bd48-48ae191814bd" />
+
 ---
 ## Architecture
 
